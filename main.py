@@ -1,35 +1,80 @@
 import tweepy
 from time import sleep
 
-API_KEY = "XXXXXXXXXXXXXXXXXXXX"
-API_SECRET = 'XXXXXXXXXXXXXXXXXXXX'
-ACCESS_TOKEN = 'XXXXXXXXXXXXXXXXXXXX-XXXXXXXXXXXXXXXXXXXX'
-ACCESS_TOKEN_SECRET = 'XXXXXXXXXXXXXXXXXXXX'
+API_KEY = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+API_SECRET = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
+ACCESS_TOKEN = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
+ACCESS_TOKEN_SECRET = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
 
 auth = tweepy.OAuthHandler(API_KEY, API_SECRET)
 auth.set_access_token(ACCESS_TOKEN, ACCESS_TOKEN_SECRET)
 api = tweepy.API(auth)
+
+def main():
+    # get_user_tweet(書き込むファイル, ユーザー名, 取得数)
+    # get_user_tweet('board.txt', "@Python", 200)
+
+    # follow(特定のワード,フォローする数)
+    # follow("Python", 20)
+
+    # remove_unfollower(自分のユーザー名, 解除する数)
+    # remove_unfollower("@username", 50)
+
+    # get_serch_tweet(書き込むファイル, 特定のワード, 取得したい数)
+    # get_serch_tweet('board.txt', "@Python", 100)
+
+    # search_retweet_rt(検索ワード, リツイートする数, 対象のツイートのRT数)
+    # search_retweet_rt("#Python", 10, 500)
+
+    # search_retweet_fav(検索ワード, リツイートする数, 対象のツイートのFAV数)
+    # search_retweet_fav("Python", 5, 500)
+
+    # favorite(検索ワード, ふぁぼする数)
+    # favorite("Python", 100)
+
+    # user_fav("アカウント",ふぁぼする数)
+    # user_fav("@Python",20)
+
+    timeline_fav()
+
+def user_fav(account, count):  # 特定のユーザーのツイート取得し書き込み
+
+    tweets = api.user_timeline(account, count=count, page=1)
+    now_count = 1
+
+    for tweet in tweets:
+        print('\nTweetID : ' + str(tweet.id))               # tweetのID
+        print('\nUserID : @' + str(tweet.user.screen_name))  # ユーザー名
+        print('\nDate : ' + str(tweet.created_at))      # 呟いた日時
+        print("\n" + str(tweet.text))                  # ツイート内容
+        print('\nRT : ' + str(tweet.retweet_count))  # ツイートのリツイート数
+        print('\nFav : ' + str(tweet.favorite_count))  # ツイートのいいね数
+        print('\nTweetCount : ' + str(now_count) + "\n")  # ツイート数
+        try:
+            api.create_favorite(tweet.id)
+            print("いいねしました")
+        except:
+            print("いいねできませんでした")
+        now_count += 1  # ツイート数を計算
 
 
 def get_user_tweet(textfile, account, count):  # 特定のユーザーのツイート取得し書き込み
 
     tweets = api.user_timeline(account, count=count, page=1)
     now_count = 1
-    f = open(textfile, 'w')
+    with open(textfile, 'w') as f:
 
-    for tweet in tweets:
-        f.write('\nTweetID : ' + str(tweet.id))               # tweetのID
-        f.write('\nUserID : @' + str(tweet.user.screen_name))  # ユーザー名
-        f.write('\nDate : ' + str(tweet.created_at))      # 呟いた日時
-        f.write("\n" + str(tweet.text))                  # ツイート内容
-        f.write('\nRT : ' + str(tweet.retweet_count))  # ツイートのリツイート数
-        f.write('\nFav : ' + str(tweet.favorite_count))  # ツイートのいいね数
-        f.write('\nTweetCount : ' + str(now_count))  # ツイート数
-        f.write(
-            '\n====================================================================')
-        now_count += 1  # ツイート数を計算
-
-    f.close()
+        for tweet in tweets:
+            f.write('\nTweetID : ' + str(tweet.id))               # tweetのID
+            f.write('\nUserID : @' + str(tweet.user.screen_name))  # ユーザー名
+            f.write('\nDate : ' + str(tweet.created_at))      # 呟いた日時
+            f.write("\n" + str(tweet.text))                  # ツイート内容
+            f.write('\nRT : ' + str(tweet.retweet_count))  # ツイートのリツイート数
+            f.write('\nFav : ' + str(tweet.favorite_count))  # ツイートのいいね数
+            f.write('\nTweetCount : ' + str(now_count))  # ツイート数
+            f.write(
+                '\n=========================================================')
+            now_count += 1  # ツイート数を計算
 
 
 def get_serch_tweet(textfile, query, cnt):  # 特定のワードを検索し書き込み
@@ -48,7 +93,7 @@ def get_serch_tweet(textfile, query, cnt):  # 特定のワードを検索し書�
         f.write('\nFav        : ' + str(tweet.favorite_count))
         f.write('\nTweetCount : ' + str(now_count))
         f.write(
-            '\n====================================================================')
+            '\n=========================================================')
         now_count += 1
 
     print("処理が終了しました")
@@ -84,6 +129,7 @@ def follow(query, count):  # 特定のワードからツイート取得し、い
 
 def favorite(query, count):  # 特定のワードからツイート取得し、いいねしてフォロー
     search_results = api.search(q=query, count=count)
+    now_count: int = 0
 
     for result in search_results:
         # username = result.user._json['screen_name']
@@ -101,12 +147,14 @@ def favorite(query, count):  # 特定のワードからツイート取得し、�
             api.create_favorite(user_id)  # ファヴォる
             print(user)
             print("をいいねしました")
+            now_count += 1
         except:
             print("もう既にいいねかフォローしています")
 
-        print("##################")
+        print("#"*60)
         sleep(1)
     print("処理を終了しました")
+    print(f"実行した件数：{now_count}件")
 
 
 def search_retweet_rt(query, count, rtcount):  # 特定のRT数以上のツイートをRT
@@ -143,7 +191,7 @@ def search_retweet_rt(query, count, rtcount):  # 特定のRT数以上のツイ�
 
 
 def search_retweet_fav(query, count, favcount):  # 特定のFAV数以上のツイートをRT
-    serch_results = api.search(q=query, count=5000)  # 5000件検索
+    serch_results = api.search(q=query, count=100)  # 5000件検索
     nowcount = 0
 
     for result in serch_results:
@@ -225,29 +273,6 @@ def timeline_fav():
     print(f"{hit_count}件のいいね")
 
 
-def main():
-    # get_user_tweet(書き込むファイル, ユーザー名, 取得数)
-    get_user_tweet('board.txt', "@Python", 200)
-
-    # follow(特定のワード,フォローする数)
-    follow("#Python", 100)
-
-    # remove_unfollower(自分のユーザー名, 解除する数)
-    remove_unfollower("@username", 50)
-
-    # get_serch_tweet(書き込むファイル, 特定のワード, 取得したい数)
-    get_serch_tweet('board.txt', "Python", 100)
-
-    # search_retweet_rt(検索ワード, リツイートする数, 対象のツイートのRT数)
-    search_retweet_rt("Python", 10, 500)
-
-    # search_retweet_fav(検索ワード, リツイートする数, 対象のツイートのFAV数)
-    search_retweet_fav("Python", 5, 5000)
-
-    # favorite(検索ワード, ふぁぼする数)
-    favorite("Python", 100)
-
-    timeline_fav()
 
 
 if __name__ == "__main__":
