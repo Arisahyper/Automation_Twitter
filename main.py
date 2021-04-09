@@ -1,10 +1,11 @@
+import setting
 import tweepy
 from time import sleep
 
-API_KEY = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
-API_SECRET = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
-ACCESS_TOKEN = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
-ACCESS_TOKEN_SECRET = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
+API_KEY = setting.API_KEY
+API_SECRET = setting.API_SECRET
+ACCESS_TOKEN = setting.ACCESS_TOKEN
+ACCESS_TOKEN_SECRET = setting.ACCESS_TOKEN_SECRET
 
 auth = tweepy.OAuthHandler(API_KEY, API_SECRET)
 auth.set_access_token(ACCESS_TOKEN, ACCESS_TOKEN_SECRET)
@@ -30,7 +31,7 @@ def main():
     # search_retweet_fav("Python", 5, 500)
 
     # favorite(検索ワード, ふぁぼする数)
-    # favorite("Python", 100)
+    # favorite("ぺこら", 30)
 
     # user_fav("アカウント",ふぁぼする数)
     # user_fav("@Python",20)
