@@ -16,7 +16,7 @@ api = tweepy.API(auth)
 def main():
     ####### 換装済 #################################################################
     
-    timeline_fav() # 自分のタイムラインにいいね
+    # timeline_fav() # 自分のタイムラインにいいね
 
     # follow() # 検索したワードでフォローする
 
@@ -28,8 +28,7 @@ def main():
 
     ###############################################################################
 
-    # get_user_tweet(書き込むファイル, ユーザー名, 取得数)
-    # get_user_tweet('board.txt', "@sakuramiko35", 200)
+    get_user_tweet('board.txt')
 
     # remove_unfollower(自分のユーザー名, 解除する数)
     # remove_unfollower("@username", 50)
@@ -127,26 +126,31 @@ def user_fav():  # 特定のユーザーのツイート取得し書き込み
         except:
             print("いいねできませんでした")
         now_count += 1  # ツイート数を計算
+    print("合計 {now_count}件 の処理が完了しました")
 
 
-def get_user_tweet(textfile, account, count):  # 特定のユーザーのツイート取得し書き込み
+def get_user_tweet(textfile):  # 特定のユーザーのツイート取得し書き込み
+    account = input("取得するユーザーのIDを入力 >> @")
+    count = int(input("何件取得しますか？  >> "))
+
 
     tweets = api.user_timeline(account, count=count, page=1)
-    now_count = 1
+    now_count = 0
     with open(textfile, 'w') as f:
+        f.write(f"### @{account} さんのツイート ###")
 
         for tweet in tweets:
-            f.write(f"\nTweetID :{tweet.id}")               # tweetのID
-            f.write('\nUserID : @' + str(tweet.user.screen_name))  # ユーザー名
-            f.write('\nDate : ' + str(tweet.created_at))      # 呟いた日時
-            f.write("\n" + str(tweet.text))                  # ツイート内容
-            f.write('\nRT : ' + str(tweet.retweet_count))  # ツイートのリツイート数
-            f.write('\nFav : ' + str(tweet.favorite_count))  # ツイートのいいね数
-            f.write('\nTweetCount : ' + str(now_count))  # ツイート数
-            f.write(
-                '\n=========================================================')
-            now_count += 1  # ツイート数を計算
-    print("処理が完了しました")
+            now_count += 1                                          # ツイート数を計算
+            f.write(f"\nTweetCount : {now_count}")                  # ツイート数
+            f.write(f"\nTweetID    : {tweet.id}")                   # tweetのID
+            f.write(f"\nUserID     : @{tweet.user.screen_name}")    # ユーザー名
+            f.write(f"\nDate       : {tweet.created_at}")           # 呟いた日時
+            f.write(f"\nRT         : {tweet.retweet_count}")        # ツイートのリツイート数
+            f.write(f"\nFav        : {tweet.favorite_count}")       # ツイートのいいね数
+            f.write(f"\n{tweet.text}\n")                            # ツイート内容
+            f.write('#'*60)
+
+    print(f"合計 {now_count}件 の処理が完了しました")
 
 
 def create_user_graph(account, count):  # 特定のユーザーのツイート取得し書き込み
