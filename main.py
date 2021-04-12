@@ -18,7 +18,7 @@ def main():
     
     # timeline_fav() # 自分のタイムラインにいいね
 
-    # follow() # 検索したワードでフォローする
+    follow() # 検索したワードでフォローする
 
     # favorite() # 検索したワードにいいねをつける
 
@@ -26,9 +26,9 @@ def main():
     
     # create_user_graph("@sakuramiko35",100)  # ユーザーのツイートのRTといいねをグラフ化
 
-    ###############################################################################
+    # get_user_tweet('board.txt')
 
-    get_user_tweet('board.txt')
+    ###############################################################################
 
     # remove_unfollower(自分のユーザー名, 解除する数)
     # remove_unfollower("@username", 50)
@@ -47,6 +47,7 @@ def follow():  # 特定のワードからツイート取得し、いいねして
     count = int(input("何件フォローしますか？ >> "))
 
     search_results = api.search(q=query + " -filter:retweets", count=count)
+    now_count:int = 0
 
     for result in search_results:
         sleep(1)
@@ -55,6 +56,7 @@ def follow():  # 特定のワードからツイート取得し、いいねして
         tweet = result.text
         user_name = result.user.screen_name
         time = result.created_at
+        now_count += 1
 
         print(f"TweetID：{user_id}")
         print(f"名前    ：{user}")
@@ -64,13 +66,13 @@ def follow():  # 特定のワードからツイート取得し、いいねして
         try:
             api.create_friendship(user_name)
             print("をフォローしました")
+            print(f"現在の実行数  {now_count}件")
         except:
             print("既にいいねかフォローしています")
 
         print("#"*60)
-        print("#"*60)
         sleep(10)
-    print("処理を終了しました")
+    print(f"合計 {now_count}件 の処理を完了しました")
 
 
 def favorite():  # 特定のワードからツイート取得し、いいね
