@@ -14,11 +14,22 @@ auth.set_access_token(ACCESS_TOKEN, ACCESS_TOKEN_SECRET)
 api = tweepy.API(auth)
 
 def main():
+    ####### 換装済 #################################################################
+    
+    timeline_fav() # 自分のタイムラインにいいね
+
+    # follow() # 検索したワードでフォローする
+
+    # favorite() # 検索したワードにいいねをつける
+
+    # user_fav() # 特定のユーザーにファボ爆
+    
+    # create_user_graph("@sakuramiko35",100)  # ユーザーのツイートのRTといいねをグラフ化
+
+    ###############################################################################
+
     # get_user_tweet(書き込むファイル, ユーザー名, 取得数)
     # get_user_tweet('board.txt', "@sakuramiko35", 200)
-
-    # follow(特定のワード,フォローする数)
-    # follow("Python", 20)
 
     # remove_unfollower(自分のユーザー名, 解除する数)
     # remove_unfollower("@username", 50)
@@ -32,19 +43,74 @@ def main():
     # search_retweet_fav(検索ワード, リツイートする数, 対象のツイートのFAV数)
     # search_retweet_fav("Python", 5, 500)
 
-    # favorite(検索ワード, ふぁぼする数)
-    # favorite("みこち" , 30)
+def follow():  # 特定のワードからツイート取得し、いいねしてフォロー
+    query = input("検索ワードの入力 >> ")
+    count = int(input("何件フォローしますか？ >> "))
 
-    # user_fav("アカウント",ふぁぼする数)
-    # user_fav("@Python",20)
-    
-    timeline_fav()
+    search_results = api.search(q=query + " -filter:retweets", count=count)
 
-    # create_user_graph("@sakuramiko35",200)
+    for result in search_results:
+        sleep(1)
+        user_id = result.id
+        user = result.user.name
+        tweet = result.text
+        user_name = result.user.screen_name
+        time = result.created_at
 
-def user_fav(account, count):  # 特定のユーザーのツイート取得し書き込み
+        print(f"TweetID：{user_id}")
+        print(f"名前    ：{user}")
+        print(f"ID     ：{user_name}")
+        print(f"時間    ：{time}")
+        print(f"【 内容 】\n{tweet}")
+        try:
+            api.create_friendship(user_name)
+            print("をフォローしました")
+        except:
+            print("既にいいねかフォローしています")
 
-    tweets = api.user_timeline(account, count=count, page=1)
+        print("#"*60)
+        print("#"*60)
+        sleep(10)
+    print("処理を終了しました")
+
+
+def favorite():  # 特定のワードからツイート取得し、いいね
+    query = input("検索ワードの入力 >> ")
+    count = int(input("何件いいねしますか？ >> "))
+
+    search_results = api.search(q=query + " -filter:retweets", count=count)
+    now_count: int = 0
+
+    for result in search_results:
+        # username = result.user._json['screen_name']
+        user_name = result.user.screen_name
+        user_id = result.id  # ツイートのstatusオブジェクトから、ツイートidを取得
+        user = result.user.name  # ツイートのstatusオブジェクトから、userオブジェクトを取り出し、名前を取得する
+        tweet = result.text
+        time = result.created_at
+        print(f"TweetID : {user_id}")
+        print(f"ID      : {user_name}")
+        print(f"Name    : {user}")
+        print(f"Time    :{time}")
+        print(f"【Tweet】 \n{tweet}")
+        try:
+            api.create_favorite(user_id)  # ファヴォる
+            print(f"\n{user}をいいねしました")
+            now_count += 1
+        except:
+            print("\n既にいいねしています")
+
+        print("#"*60)
+        sleep(4)
+    print("処理を終了しました")
+    print(f"実行件数：{now_count}件")
+
+
+def user_fav():  # 特定のユーザーのツイート取得し書き込み
+    account = input("ふぁぼ爆するユーザーのIDを入力 >> @")
+    count = int(input("何件いいねしますか？  >> "))
+
+    tweets = api.user_timeline("@" + account, count=count, page=1)
     now_count = 1
 
     for tweet in tweets:
@@ -70,7 +136,7 @@ def get_user_tweet(textfile, account, count):  # 特定のユーザーのツイ�
     with open(textfile, 'w') as f:
 
         for tweet in tweets:
-            f.write('\nTweetID : ' + str(tweet.id))               # tweetのID
+            f.write(f"\nTweetID :{tweet.id}")               # tweetのID
             f.write('\nUserID : @' + str(tweet.user.screen_name))  # ユーザー名
             f.write('\nDate : ' + str(tweet.created_at))      # 呟いた日時
             f.write("\n" + str(tweet.text))                  # ツイート内容
@@ -89,28 +155,29 @@ def create_user_graph(account, count):  # 特定のユーザーのツイート�
     tweets = api.user_timeline(account, count=count, page=1)
     now_count = 1
     for tweet in tweets:
-        print('TweetID : ' + str(tweet.id))                   # tweetのID
-        print('UserID  : @' + str(tweet.user.screen_name))    # ユーザー名
-        print('Date    : ' + str(tweet.created_at))           # 呟いた日時
-        print("" + str(tweet.text))                           # ツイート内容
-        print('RT      : ' + str(tweet.retweet_count))        # ツイートのリツイート数
-        print(f"Fav    : {tweet.favorite_count}")             # ツイートのいいね数
-        print(f"{str(now_count)}件目")                         # ツイート数
-        Rtlist.append(tweet.retweet_count)
-        Favlist.append(tweet.favorite_count)
-        print(f"{Rtlist}\n{Favlist}")
-        print("#" * 60)
+        if not "RT @" in tweet.text[0:4]: 
+            print('TweetID : ' + str(tweet.id))                   # tweetのID
+            print('UserID  : @' + str(tweet.user.screen_name))    # ユーザー名
+            print('Date    : ' + str(tweet.created_at))           # 呟いた日時
+            print("" + str(tweet.text))                           # ツイート内容
+            print('RT      : ' + str(tweet.retweet_count))        # ツイートのリツイート数
+            print(f"Fav    : {tweet.favorite_count}")             # ツイートのいいね数
+            print(f"{str(now_count)}件目")                         # ツイート数
+            Rtlist.append(tweet.retweet_count)
+            Favlist.append(tweet.favorite_count)
+            print(f"{Rtlist}\n{Favlist}")
+            print("#" * 60)
 
-        now_count += 1   # ツイート数を計算
+            now_count += 1   # ツイート数を計算
 
-    x:list = np.arange(200)
+    x:list = np.arange(53)
     rt_y:list = np.array(Rtlist)
     fav_y:list = np.array(Favlist)
 
 
     plt.figure(figsize=(10.0,6.0))  # 順番大事
     plt.style.context('dark_background')
-    plt.title("@sakuramiko35 RTchart")
+    plt.title("@sakuramiko35 ReactionChart")
     plt.xlabel("Tweetcount")
     # plt.ylabel("RTcount")
 
@@ -144,61 +211,37 @@ def get_serch_tweet(textfile, query, cnt):  # 特定のワードを検索し書�
     f.close()
 
 
-def follow(query, count):  # 特定のワードからツイート取得し、いいねしてフォロー
-    search_results = api.search(q=query + " -filter:retweets", count=count)
+def timeline_fav():
+    timeline = api.home_timeline(count=30)
+    hit_count = 0
+    for tweet in timeline:
+        if not "@" in tweet.text[0]:
+        # if not tweet.text.startswith("@"):
+            tweet_id = tweet.id
+            user_name = tweet.user.name
+            user_id = tweet.user.screen_name
+            text = tweet.text
+            time = tweet.created_at
 
-    for result in search_results:
-        sleep(1)
-        user_id = result.id
-        user = result.user.name
-        tweet = result.text
-        user_name = result.user.screen_name
-        time = result.created_at
+            print(f"TweetID：{tweet_id}")
+            print(f"Nama   ：{user_name}")
+            print(f"ID     ：{user_id}")
+            print(f"Time   ：{time}")
+            print(f"【 内容 】\n{text}")
 
-        print(f"TweetID：{user_id}")
-        print(f"名前    ：{user}")
-        print(f"ID     ：{user_name}")
-        print(f"時間    ：{time}")
-        print(f"【 内容 】\n{tweet}")
-        try:
-            api.create_friendship(user_name)
-            print("をフォローしました")
-        except:
-            print("既にいいねかフォローしています")
+            try:
+                api.create_favorite(tweet_id)
+                print("いいねしました")
+                hit_count += 1
+            except:
+                print("既にいいね済みです")
 
-        print("#"*60)
-        print("#"*60)
-        sleep(10)
+            print("#"*60)
+            sleep(1)
+
     print("処理を終了しました")
+    print(f"{hit_count}件のいいね")
 
-
-def favorite(query, count):  # 特定のワードからツイート取得し、いいね
-    search_results = api.search(q=query+" -filter:retweets", count=count)
-    now_count: int = 0
-
-    for result in search_results:
-        # username = result.user._json['screen_name']
-        user_name = result.user.screen_name
-        user_id = result.id  # ツイートのstatusオブジェクトから、ツイートidを取得
-        user = result.user.name  # ツイートのstatusオブジェクトから、userオブジェクトを取り出し、名前を取得する
-        tweet = result.text
-        time = result.created_at
-        print(f"TweetID : {user_id}")
-        print(f"ID      : {user_name}")
-        print(f"Name    : {user}")
-        print(f"Time    :{time}")
-        print(f"【Tweet】 \n{tweet}")
-        try:
-            api.create_favorite(user_id)  # ファヴォる
-            print(f"{user}をいいねしました")
-            now_count += 1
-        except:
-            print("既にいいねしています")
-
-        print("#"*60+"\n")
-        sleep(1)
-    print("処理を終了しました")
-    print(f"実行件数：{now_count}件")
 
 
 def search_retweet_rt(query, count, rtcount):  # 特定のRT数以上のツイートをRT
@@ -288,34 +331,7 @@ def remove_unfollower(userid, count):  # フォローされていないユーザ
     print("処理を終了しました")
 
 
-def timeline_fav():
-    timeline = api.home_timeline()
-    hit_count = 0
-    for tweet in timeline:
-        userid = tweet.id
 
-        user_name = tweet.user.name
-        user_id = tweet.user.screen_name
-        text = tweet.text
-        time = tweet.created_at
-
-        print("#"*60)
-        print(f"名前：{user_name}")
-        print(f"ID：{user_id}")
-        print(f"【 内容 】\n{text}")
-        print(f"投稿日時：{time}")
-
-        try:
-            api.create_favorite(userid)
-            print("いいねしました")
-            hit_count += 1
-        except:
-            print("既にいいね済みです")
-        
-        sleep(1)
-
-    print("処理を終了しました")
-    print(f"{hit_count}件のいいね")
 
 
 
