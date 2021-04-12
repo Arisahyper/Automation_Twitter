@@ -18,13 +18,13 @@ def main():
     
     # timeline_fav() # 自分のタイムラインにいいね
 
-    follow() # 検索したワードでフォローする
+    # follow() # 検索したワードでフォローする
 
     # favorite() # 検索したワードにいいねをつける
 
     # user_fav() # 特定のユーザーにファボ爆
     
-    # create_user_graph("@sakuramiko35",100)  # ユーザーのツイートのRTといいねをグラフ化
+    create_user_graph()  # ユーザーのツイートのRTといいねをグラフ化
 
     # get_user_tweet('board.txt')
 
@@ -155,43 +155,54 @@ def get_user_tweet(textfile):  # 特定のユーザーのツイート取得し�
     print(f"合計 {now_count}件 の処理が完了しました")
 
 
-def create_user_graph(account, count):  # 特定のユーザーのツイート取得し書き込み
+def create_user_graph():  # 特定のユーザーのツイート取得し書き込み
     Rtlist:list = []
     Favlist:list = []
-    tweets = api.user_timeline(account, count=count, page=1)
+    countlist:list = []
     now_count = 1
+
+    account = input("ユーザーのIDを入力 >> @")
+    count = int(input("何件取得しますか？  >> "))
+
+    tweets = api.user_timeline(account, count=count, page=1)
     for tweet in tweets:
-        if not "RT @" in tweet.text[0:4]: 
-            print('TweetID : ' + str(tweet.id))                   # tweetのID
-            print('UserID  : @' + str(tweet.user.screen_name))    # ユーザー名
-            print('Date    : ' + str(tweet.created_at))           # 呟いた日時
-            print("" + str(tweet.text))                           # ツイート内容
-            print('RT      : ' + str(tweet.retweet_count))        # ツイートのリツイート数
-            print(f"Fav    : {tweet.favorite_count}")             # ツイートのいいね数
-            print(f"{str(now_count)}件目")                         # ツイート数
-            Rtlist.append(tweet.retweet_count)
-            Favlist.append(tweet.favorite_count)
-            print(f"{Rtlist}\n{Favlist}")
-            print("#" * 60)
+        if not "RT @" in tweet.text[0:4]:
+            try: 
+                print('TweetID : ' + str(tweet.id))                   # tweetのID
+                print('UserID  : @' + str(tweet.user.screen_name))    # ユーザー名
+                print('Date    : ' + str(tweet.created_at))           # 呟いた日時
+                print("" + str(tweet.text))                           # ツイート内容
+                print('RT      : ' + str(tweet.retweet_count))        # ツイートのリツイート数
+                print(f"Fav    : {tweet.favorite_count}")             # ツイートのいいね数
+                print(f"{str(now_count)}件目")                         # ツイート数
+                Rtlist.append(tweet.retweet_count)
+                Favlist.append(tweet.favorite_count)
+                countlist.append(now_count)
+                print(f"{Rtlist}\n{Favlist}")
+                print("#" * 60)
 
-            now_count += 1   # ツイート数を計算
+                now_count += 1   # ツイート数を計算
+            except:
+                print("エラー")
 
-    x:list = np.arange(53)
+    x:list = np.array(countlist)
     rt_y:list = np.array(Rtlist)
     fav_y:list = np.array(Favlist)
 
 
-    plt.figure(figsize=(10.0,6.0))  # 順番大事
-    plt.style.context('dark_background')
-    plt.title("@sakuramiko35 ReactionChart")
+    fig = plt.figure(figsize=(10.0,6.0))
+    plt.title(f"@{account} ReactionChart")
     plt.xlabel("Tweetcount")
-    # plt.ylabel("RTcount")
 
-    # plt.plot(np.sin(np.linspace(0, 2 * np.pi)), 'r-o')
     plt.plot(x, rt_y, label = "RT", color = "#00ff00")
     plt.plot(x, fav_y, label = "Favorite", color = "#f781bf")
     plt.legend()
-    plt.show()
+    plt.grid(True)
+
+    imgname = (f"{account}-tweet.png")
+    fig.savefig(imgname)
+
+    api.update_with_media(status = (f"@ {account} ReactionChart"), filename = imgname)
     
 
 def get_serch_tweet(textfile, query, cnt):  # 特定のワードを検索し書き込み
