@@ -23,18 +23,18 @@ class Hololive():
         self.cut_tag = cut_tag
         self.fan_name = fan_name
 
-    def WriteTweet_id(self,id):
+    def WriteTweet_id(self):
         """
         ユーザーのIDを参照してツイートを取得します
         """
 
-        tweets = api.user_timeline(id, count=100, page=1)
+        tweets = api.user_timeline(self.id, count=100, page=1)
         count = 0
 
         date = datetime.datetime.now().strftime('%Y:%m:%d: %H:%M:%S')
-        with open(f"./TweetData/{id}-{date}.txt","w") as f:
+        with open(f"./TweetData/{self.id}-{date}.txt","w") as f:
         # with open("board.txt", 'w') as f:
-            f.write(f"### @{id} さんのツイート ###\n")
+            f.write(f"### @{self.id} さんのツイート ###\n")
 
             for tweet in tweets:
                 count += 1                                          # ツイート数を計算
@@ -49,12 +49,17 @@ class Hololive():
 
         print(f"合計 {count}件 の処理が完了しました")
 
+Aqua   = Hololive("湊あくあ","minatoaqua","#あくあーと","#湊あくあ生放送","あくあクルー","#切り抜きあくたん")
+
+Marine = Hololive("宝鐘マリン","houshoumarine","#マリンのお宝","#マリン航海記","宝鐘の一味","#わかるマリン")
+Pekora = Hololive("兎田ぺこら","usadapekora","#ぺこらーと","#ぺこらいぶ","野うさぎ","#ひとくちぺこら")
+Flare  = Hololive("不知火フレア","shiranuiflare","#しらぬえ","#フレアストリーム","エルフレンド","#切りぬい")
+Noel   = Hololive("白銀ノエル","shiroganenoel","#ノエラート","#ノエルーム","白銀聖騎士団","#クリ抜き太郎")
+Rushia = Hololive("潤羽るしあ","uruharushia","#絵クロマンサー","#るしあらいぶ","ふぁんでっど","#きるしあ")
+
 def main():
-    Rushia = Hololive("潤羽るしあ","uruharushia","#絵クロマンサー","#るしあらいぶ","ふぁんでっど","#きるしあ")
-    Aqua = Hololive("湊あくあ","minatoaqua","#あくあーと","#湊あくあ生放送","あくあクルー","#切り抜きあくたん")
-    
-    Rushia.WriteTweet_id(Rushia.id)
-    Aqua.WriteTweet_id(Aqua.id)
+    Rushia.WriteTweet_id()
+    Aqua.WriteTweet_id()
 
     
 

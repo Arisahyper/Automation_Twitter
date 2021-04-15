@@ -369,7 +369,7 @@ def create_graph_auto(account,count):
 
     dt_now = datetime.datetime.now()
     dt_now = dt_now.strftime('%Y:%m:%d: %H:%M:%S')
-    imgname = (f"{account}-{dt_now}-tweet.png")
+    imgname = (f"./ReactionChartData/{account}-{dt_now}-tweet.png")
     fig.savefig(imgname)
 
     # api.update_with_media(status = (f"@ {account} ReactionChart"), filename = imgname)
