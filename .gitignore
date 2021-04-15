@@ -140,7 +140,9 @@ celerybeat.pid
 
 # Environments
 # .env
+*.png
 *.env
+*.txt
 .venv/
 env/
 venv/
