@@ -17,9 +17,9 @@ api = tweepy.API(auth)
 def main():
     ####### 換装済 #################################################################
     
-    create_graph_auto("sakuramiko35",100)
+    # create_graph_auto("sakuramiko35",100)
 
-    # timeline_fav() # 自分のタイムラインにいいね
+    # timeline_fav() # 自分のタイムインにいいね
 
     # follow() # 検索したワードでフォローする
 
@@ -27,7 +27,7 @@ def main():
 
     # user_fav() # 特定のユーザーにファボ爆
     
-    # create_user_graph()  # ユーザーのツイートのRTといいねをグラフ化
+    create_user_graph()  # ユーザーのツイートのRTといいねをグラフ化
 
     # get_user_tweet()
 
@@ -367,8 +367,7 @@ def create_graph_auto(account,count):
     plt.legend()
     plt.grid(True)
 
-    dt_now = datetime.datetime.now()
-    dt_now = dt_now.strftime('%Y:%m:%d: %H:%M:%S')
+    dt_now = datetime.datetime.now().strftime('%Y:%m:%d: %H:%M:%S')
     imgname = (f"./ReactionChartData/{account}-{dt_now}-tweet.png")
     fig.savefig(imgname)
 
