@@ -512,7 +512,7 @@ Rushia  = Hololive("潤羽るしあ","uruharushia","絵クロマンサー","る�
 def main():
     Me.Timeline()
     # Me.Timeline_favorite()
-    # Me.Writetweet_by_query("#Python 学習",100)
+    # Me.Writetweet_by_query("潤羽るしあ",100)
     # Me.Follow_by_query()
 
     # Me.Follow_by_query("湊あくあ",2)
