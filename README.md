@@ -2,13 +2,6 @@
 
 
 
-# Requirement
-
-"hoge"を動かすのに必要なライブラリなどを列挙する
-
-* huga 3.5.2
-* hogehuga 1.0.2
-
 # Installation
 
 Requirementで列挙したライブラリなどのインストール方法を説明する
@@ -22,7 +15,6 @@ pip install python-dotenv
 
 # Usage
 
-DEMOの実行方法など、"hoge"の基本的な使い方を説明する
 
 ```bash
 git clone https://github.com/Arisahyper/twitter-api.git
