@@ -4,7 +4,6 @@
 
 # Installation
 
-Requirementで列挙したライブラリなどのインストール方法を説明する
 
 ``` zsh
 pip install numpy
