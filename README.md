@@ -27,8 +27,6 @@ python main.py
 
 # Author
 
-作成情報を列挙する
-
 * Yoshitsugu Tahara
 * Arisahyper0000@gmail.com
 
