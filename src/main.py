@@ -12,16 +12,16 @@ Miko = Hololive("さくらみこ", "sakuramiko35", "miko_art", "みこなま", "
 # Suisei  = Hololive("星街すいせい")
 
 # # 1stGeneration
-# Mel     = Hololive("夜空メル")
-# Matsuri = Hololive("夏色まつり")
-# Fubuki  = Hololive("白上フブキ")
-# Aki     = Hololive("アキ・ローゼンタール")
-# Haato   = Hololive("赤井はあと")
+# Mel     = HoloManager("夜空メル")
+# Matsuri = HoloManager("夏色まつり")
+# Fubuki  = HoloManager("白上フブキ")
+# Aki     = HoloManager("アキ・ローゼンタール")
+# Haato   = HoloManager("赤井はあと")
 
 # # Gamers
-# Mio     = Hololive("大神ミオ")
-# Okayu   = Hololive("猫又おかゆ")
-# Korone  = Hololive("戌神ころね")
+# Mio     = HoloManager("大神ミオ")
+# Okayu   = HoloManager("猫又おかゆ")
+# Korone  = HoloManager("戌神ころね")
 
 # # 2ndGeneration
 # Choco   = Hololive("")
@@ -44,17 +44,17 @@ Rushia = Hololive(
 )
 
 # # 4thGeneration
-# Kanata  = Hololive("")
-# Towa    = Hololive("")
-# Coco    = Hololive("")
-# Watame  = Hololive("")
-# Luna    = Hololive("")
+# Kanata  = HoloManager("")
+# Towa    = HoloManager("")
+# Coco    = HoloManager("")
+# Watame  = HoloManager("")
+# Luna    = HoloManager("")
 
 # # 5thGeneration
-# Lamy    = Hololive("")
-# Nene    = Hololive("")
-# Botan   = Hololive("")
-# Polka   = Hololive("")
+# Lamy    = HoloManager("")
+# Nene    = HoloManager("")
+# Botan   = HoloManager("")
+# Polka   = HoloManager("")
 
 
 def main():
@@ -64,10 +64,6 @@ def main():
     # Me.Follow_by_query()
 
     # Me.Follow_by_query("湊あくあ",2)
-    # Aqua.Follow_by_fanname(10)
-    # Marine.RT_by_arttag(10)
-    # Aqua.RT_by_arttag(10)
-    # Rushia.RT_by_arttag(10)
     # Miko.favorite_by_fanname(20)
     # Aqua.favorite_by_fanname(20)
     # Aqua.favorite_by_livetag(20)

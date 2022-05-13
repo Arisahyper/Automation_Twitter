@@ -4,7 +4,6 @@
 
 # Installation
 
-Requirementで列挙したライブラリなどのインストール方法を説明する
 
 ``` zsh
 pip install numpy
@@ -27,8 +26,6 @@ python main.py
 ・用途に応じて関数をmain内で実行してください
 
 # Author
-
-作成情報を列挙する
 
 * Yoshitsugu Tahara
 * Arisahyper0000@gmail.com
