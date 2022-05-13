@@ -1,0 +1,40 @@
+name: linter_formatter
+
+on:
+  push:
+
+jobs:
+  linter_formatter:
+    name: linter_formatter
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        python-version: [3.9.x]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+
+      - name: Install pip
+        run: |
+          curl -kL https://bootstrap.pypa.io/get-pip.py | python
+      
+      - name: Install Flake8
+        run: |
+          pip install flake8
+      
+      - name: Install Black
+        run: |
+          pip install black
+
+      - name: Run Black
+        run: |
+          black .
+      
+      - name: Run Flake8
+        run: |
+          flake8 .
